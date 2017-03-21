@@ -21,35 +21,49 @@ int main(){
     if(f_in.fail()){ //test de l'ouvertutre du fichier
         string errOuv = "Erreur lors de l'ouverture du fichier pixmap.txt";
         Shutdown(errOuv, f_in, f_out);
-    }else{
+    }
+    else{
         if(f_in.fail()){ //test de la lecture du fichier
             string errLect = "Erreur lors de la lecture du fichier";
             Shutdown(errLect, f_in, f_out);
         }
         else{
-            int largeur(0), hauteur(0);
+            int largeur(0), hauteur(0), nbCoul(0), nbTraces(0);
             f_in >> largeur; // Récupération de la largeur dans un int
+            if(largeur<10){
+                //cout<<"Largeur= "<<largeur<<endl;
+                string errDim = "La largeur est trop petite (<10)!";
+                Shutdown(errDim, f_in, f_out);
+            }
+            else if(largeur>1000){
+                //cout<<"Largeur= "<<largeur<<endl;
+                string errDim = "La largeur est trop grande (>1000)!";
+                Shutdown(errDim, f_in, f_out);
+            }
+            
             f_in >> hauteur; // Récupération de la hauteur
-            if(largeur<=10){
-                //cout<<"Largeur= "<<largeur<<endl;
-                string errDim = "La largeur est trop petite <=10";
-                Shutdown(errDim, f_in, f_out);
-            }else if(largeur>1000){
-                //cout<<"Largeur= "<<largeur<<endl;
-                string errDim = "La largeur est trop grande >1000";
+            if(hauteur<10){
+                string errDim = "La hauteur est trop petite (<10)!";
                 Shutdown(errDim, f_in, f_out);
             }
-           f_in.read((char*)&hauteur,sizeof(hauteur)-1);// meme chose que pour la largeure, mais pour la hauteurs
-           if(hauteur<=10){
-                string errDim = "La hauteur est trop petite <=10";
-                Shutdown(errDim, f_in, f_out);
-            }else if(hauteur>1000){
-                string errDim = "La hauteur est trop grande >1000";
+            else if(hauteur>1000){
+                string errDim = "La hauteur est trop grande (>1000)!";
                 Shutdown(errDim, f_in, f_out);
             }
-
+            
             cout<<largeur<<": largeur"<<endl;
             cout<<hauteur<<": hauteur"<<endl;
+            
+            f_in >> nbCoul;
+            nbTraces = nbCoul - 4;
+            
+            for(int i(0); i < 4; i++){ //Couleurs des points référence dans un vecteur
+                
+            }
+            
+            for(int j(0); j < nbTraces; j++){  //Couleurs des différentes traces
+                
+            }
         }
     }
 }
