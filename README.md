@@ -1,6 +1,6 @@
 # Pix2Coord
 
-Conventions:;
+Conventions:
 Variables: nomEtendu(valeur)
 Fonctions: FnLire
 Structure: 
