@@ -7,7 +7,7 @@ using namespace std;
 //Prototypes
 void shutdown(string message, ifstream &f_in, ofstream &f_out);
 
-//Définition des fonctions
+//DÃ©finition des fonctions
 void Shutdown(string message, ifstream &f_in, ofstream &f_out){
     cerr<<message<<endl;
     f_in.close();
@@ -28,12 +28,10 @@ int main(){
             Shutdown(errLect, f_in, f_out);
         }
         else{
-            unsigned int largeur, hauteur;
+            string largeurStr, hauteurStr;
             string tmp;
-            char delim(3);
             getline(f_in,tmp);
-            largeur=//NE PEUX PAS METTRE UNE VALEUR FIXE ! (ICI 3)
-            //cout<<"tmp: "<<tmp<<endl;
+            largeurStr=tmp;
             if(largeur<=10){
                 //cout<<"Largeur= "<<largeur<<endl;
                 string errDim = "La largeur est trop petite <=10";
