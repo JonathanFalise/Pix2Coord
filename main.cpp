@@ -27,10 +27,9 @@ int main(){
             Shutdown(errLect, f_in, f_out);
         }
         else{
-            string largeurStr, hauteurStr;
-            string tmp;
             int largeur(0), hauteur(0);
-            f_in >> largeur;// Récupération de la largeur dans un int
+            f_in >> largeur; // Récupération de la largeur dans un int
+            f_in >> hauteur; // Récupération de la hauteur
             if(largeur<=10){
                 //cout<<"Largeur= "<<largeur<<endl;
                 string errDim = "La largeur est trop petite <=10";
