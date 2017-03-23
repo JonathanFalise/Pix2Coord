@@ -50,7 +50,8 @@ int main(){
             Shutdown(errLect, f_in, f_out);
         }
         else{
-            int largeur(0), hauteur(0), nbCoul(0), nbTraces(0);
+            int largeur(0), hauteur(0), nbCoul(0), nbTraces(0), compteur(0),XptRef1(0),YptRef1(0);
+            
             f_in >> largeur; // Récupération de la largeur dans un int
             if(largeur<10){
                 //cout<<"Largeur= "<<largeur<<endl;
@@ -92,6 +93,18 @@ int main(){
                 vectColorTraces.push_back(tmp);
             }
             printTabl(vectColorTraces);
+            
+            while(!f_in.eof()){     //Boucle qui lit tout le fichier GESTION ERREUR A FAIRE: 1PIXEL NON BLANC. A VOIR: PAS BESOIN DE TABLEAU DE STOCKAGE INTERME COMME DEMANDER DANS LA DONNEE.
+                int tmp(0);
+                f_in>> tmp;
+
+                if(tmp==vectColorRef.at(0)){    //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
+                    XptRef1= compteur%largeur;
+                    YptRef1= (hauteur-1)-(compteur/largeur);
+                    cout<<"X= "<<XptRef1<<" Y= "<<YptRef1<<endl;
+                }
+                compteur++;
+            }
         }
     }
 }
