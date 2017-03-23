@@ -99,26 +99,29 @@ int main(){
                 int tmp(0);
                 f_in>> tmp;
 
+                                        // SWITCH CASE MIEUX ? A TESTER
                 if(tmp==vectColorRef.at(0)){    //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
                     XptRef1= compteur%largeur;
                     YptRef1= (hauteur-1)-(compteur/largeur);
                     cout<<"X= "<<XptRef1<<" Y= "<<YptRef1<<endl;
                 }
-                if(tmp==vectColorRef.at(1)){    //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
+                if(tmp==vectColorRef.at(1)){    //test si la ligne a la couleur de ref 2. CA A L'AIRE OK. A VERIFIER
                     XptRef2= compteur%largeur;
                     YptRef2= (hauteur-1)-(compteur/largeur);
-                    cout<<"X= "<<XptRef1<<" Y= "<<YptRef1<<endl;
+                    cout<<"X= "<<XptRef2<<" Y= "<<YptRef2<<endl;
                 }
-                if(tmp==vectColorRef.at(2)){    //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
+                if(tmp==vectColorRef.at(2)){    //test si la ligne a la couleur de ref 3. CA A L'AIRE OK. A VERIFIER
                     XptRef3= compteur%largeur;
                     YptRef4= (hauteur-1)-(compteur/largeur);
-                    cout<<"X= "<<XptRef1<<" Y= "<<YptRef1<<endl;
+                    cout<<"X= "<<XptRef3<<" Y= "<<YptRef3<<endl;
                 }
-                if(tmp==vectColorRef.at(3)){    //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
+                if(tmp==vectColorRef.at(3)){    //test si la ligne a la couleur de ref 4. CA A L'AIRE OK. A VERIFIER
                     XptRef4= compteur%largeur;
                     YptRef4= (hauteur-1)-(compteur/largeur);
-                    cout<<"X= "<<XptRef1<<" Y= "<<YptRef1<<endl;
+                    cout<<"X= "<<XptRef4<<" Y= "<<YptRef4<<endl;
                 }
+                // AUTRE SWITCH CASE POUR COULEUR TRACES
+               
                 compteur++;
             }
         }
