@@ -17,8 +17,8 @@ void Shutdown(string message, ifstream &f_in, ofstream &f_out){
     exit(EXIT_FAILURE); // Arrete le fichier si la fonction shutdown est appele
 }
 
-void printTabl(vector <int> const &vect2Print){//print le vecteur
-    int sizeVect2Print=vect2Print.size();
+void printVect(vector <int> const &vect2Print){//print le vecteur
+    int szVect2Print=vect2Print.size();
     for(int i(0);i<sizeVect2Print;i++){
         cout<<"V("<<i<<")= "<<vect2Print.at(i)<<endl;
     }
@@ -50,7 +50,8 @@ int main(){
             Shutdown(errLect, f_in, f_out);
         }
         else{
-            int largeur(0), hauteur(0), nbCoul(0), nbTraces(0), compteur(0),XptRef1(0),YptRef1(0);
+            int largeur(0), hauteur(0), nbCoul(0), nbTraces(0), compteur(0);
+            int XptRef1(0),YptRef1(0),XptRef2(0),YptRef2(0),XptRef3(0),YptRe31(0),XptRef4(0),YptRef4(0);
             
             f_in >> largeur; // Récupération de la largeur dans un int
             if(largeur<10){
@@ -85,14 +86,14 @@ int main(){
                 f_in >> tmp;
                 vectColorRef.push_back(tmp);
             }
-            printTabl(vectColorRef);
+            printVect(vectColorRef);
 
             for(int j(0); j < nbTraces; j++){  //Couleurs des différentes traces
                 int tmp(0);
                 f_in >> tmp;
                 vectColorTraces.push_back(tmp);
             }
-            printTabl(vectColorTraces);
+            printVect(vectColorTraces);
             
             while(!f_in.eof()){     //Boucle qui lit tout le fichier GESTION ERREUR A FAIRE: 1PIXEL NON BLANC. A VOIR: PAS BESOIN DE TABLEAU DE STOCKAGE INTERME COMME DEMANDER DANS LA DONNEE.
                 int tmp(0);
@@ -101,6 +102,21 @@ int main(){
                 if(tmp==vectColorRef.at(0)){    //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
                     XptRef1= compteur%largeur;
                     YptRef1= (hauteur-1)-(compteur/largeur);
+                    cout<<"X= "<<XptRef1<<" Y= "<<YptRef1<<endl;
+                }
+                if(tmp==vectColorRef.at(1)){    //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
+                    XptRef2= compteur%largeur;
+                    YptRef2= (hauteur-1)-(compteur/largeur);
+                    cout<<"X= "<<XptRef1<<" Y= "<<YptRef1<<endl;
+                }
+                if(tmp==vectColorRef.at(2)){    //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
+                    XptRef3= compteur%largeur;
+                    YptRef4= (hauteur-1)-(compteur/largeur);
+                    cout<<"X= "<<XptRef1<<" Y= "<<YptRef1<<endl;
+                }
+                if(tmp==vectColorRef.at(3)){    //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
+                    XptRef4= compteur%largeur;
+                    YptRef4= (hauteur-1)-(compteur/largeur);
                     cout<<"X= "<<XptRef1<<" Y= "<<YptRef1<<endl;
                 }
                 compteur++;
