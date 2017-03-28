@@ -7,7 +7,7 @@ using namespace std;
 
 //Prototypes
 void shutdown(string message, ifstream &f_in, ofstream &f_out);
-void printTabl(vector <int> const &vect2Print());
+void printTabl(vector <int> const &vect2Print(), int &FnXptRef1, int &FnXptRef2, int &FnXptRef3, int &FnXptRef4,int &FnYptRef1, int &FnYptRef2, int &FnYptRef3, int &FnYptRef4);
 
 //Définition des fonctions
 void Shutdown(string message, ifstream &f_in, ofstream &f_out){
@@ -17,21 +17,22 @@ void Shutdown(string message, ifstream &f_in, ofstream &f_out){
     exit(EXIT_FAILURE); // Arrete le fichier si la fonction shutdown est appele
 }
 
-void printVect(vector <int> const &vect2Print){//print le vecteur
+void printVect(vector <int> const &vect2Print, int &FnXptRef1, int &FnXptRef2, int &FnXptRef3, int &FnXptRef4,int &FnYptRef1, int &FnYptRef2, int &FnYptRef3, int &FnYptRef4){//print le vecteur
     int szVect2Print=vect2Print.size();
     for(int i(0);i<szVect2Print;i++){
         cout<<"V("<<i<<")= "<<vect2Print.at(i)<<endl;
     }
-    /*string f_name_out;
-    f_name_out= "Pos.txt";
+    string f_name_out;
+    f_name_out= "traces.txt";
     ofstream f_out(f_name_out.c_str());
-    if(f_out.fail()){
+    /*if(f_out.fail()){
         cerr<<"erreur lors de l'ecriture dans le fichier de sortie"<<endl;
         //Un truc pour clean
     }else{
-        f_out<<TabCoord[0]<<","<<TabCoord[1]<<endl;//écrit dans le fichier la postion 1 du tableau
-        f_out<<TabCoord[2]<<","<<TabCoord[3]<<endl;
-        f_out<<TabCoord[4]<<","<<TabCoord[5]<<endl;
+        f_out<<"P = [ "<<FnXptRef1<<" "<<FnYptRef1<<endl;//écrit dans le fichier la postion 1 du tableau
+        f_out<<FnXptRef2<<" "<<FnYptRef2<<endl;
+        f_out<<FnXptRef3<<" "<<FnYptRef3<<endl;
+        f_out<<FnXptRef4<<" "<<FnYptRef4<<endl;
         f_out.close();
     }*/
 }
@@ -51,7 +52,7 @@ int main(){
         }
         else{
             int largeur(0), hauteur(0), nbCoul(0), nbTraces(0), compteur(0);
-            int XptRef1(0),YptRef1(0),XptRef2(0),YptRef2(0),XptRef3(0),YptRef3(0),XptRef4(0),YptRef4(0);
+            int XptRef1(-1),YptRef1(-1),XptRef2(-1),YptRef2(-1),XptRef3(-1),YptRef3(-1),XptRef4(-1),YptRef4(-1);// initialise a -1 car on doit verifier si les points de références sont donnés (et il pourrait être égale a 0).
             vector <int> vectColorRef, vectColorTraces, vectPosXTr1, vectPosYTr1, vectPosXTr2, vectPosYTr2, vectPosXTr3, vectPosYTr3, vectPosXTr4, vectPosYTr4;
 
             f_in >> largeur; // Récupération de la largeur dans un int
@@ -87,20 +88,27 @@ int main(){
                 f_in >> tmp;
                 vectColorRef.push_back(tmp);
             }
-            printVect(vectColorRef);
+//            printVect(vectColorRef);
 
             for(int j(0); j < nbTraces; j++){  //Couleurs des différentes traces
                 int tmp(0);
                 f_in >> tmp;
                 vectColorTraces.push_back(tmp);
             }
-            printVect(vectColorTraces);
+//            printVect(vectColorTraces);
 
             while(!f_in.eof()){     //Boucle qui lit tout le fichier GESTION ERREUR A FAIRE: 1PIXEL NON BLANC. A VOIR: PAS BESOIN DE TABLEAU DE STOCKAGE INTERME COMME DEMANDER DANS LA DONNEE.
                 int tmp(0),XPtTraces(0),YPtTraces(0);
                 f_in>> tmp;
 
-                                        // SWITCH CASE MIEUX ? A TESTER
+                if(compteur==0){
+                    if(tmp!=0){// test si le 1er pixel n'est pas blanc
+                        string errPix0="le premier pixel de l'image n'est pas blanc";
+                        Shutdown(errPix0,f_in,f_out);
+                    }
+                }
+
+//Recherche Point de Ref   SWITCH CASE MIEUX ? A TESTER---> pas sur
                 if(tmp==vectColorRef.at(0)){    //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
                     XptRef1= compteur%largeur;
                     YptRef1= (hauteur-1)-(compteur/largeur);// Possible promblème ? faudrait-il mieux arrondir avant la soustraction ?
@@ -122,32 +130,71 @@ int main(){
                     cout<<"X= "<<XptRef4<<" Y= "<<YptRef4<<endl;
                 }
 
-                // AUTRE SWITCH CASE POUR COULEUR TRACES
-                if(tmp==vectColorTraces.at(0)){// A ERREUR POSSIBLE: MINIMUM 10 POINTS --> TESTER TAILLE VECTEUR (exterieure du while)
-                    XPtTraces= compteur%largeur;
-                    YPtTraces= (hauteur-1)-(compteur/largeur);
-                    vectPosXTr1.push_back(XPtTraces);
-                    vectPosYTr1.push_back(YPtTraces);
+//Recherche de PROBLEME: NOMBRE DE TRACE PEUX VARIER DE 0 (ERREUR PAS DE TRACE) A 4 (MAX)--> SOLVED
+                switch(nbTraces){//no break car, il faut qu'il test chaque if necessaire.
+                    case 4:
+                        if(tmp==vectColorTraces.at(3)){
+                            XPtTraces= compteur%largeur;
+                            YPtTraces= (hauteur-1)-(compteur/largeur);
+                            vectPosXTr4.push_back(XPtTraces);
+                            vectPosYTr4.push_back(YPtTraces);
+                        }
+                    case 3:
+                        if(tmp==vectColorTraces.at(2)){
+                            XPtTraces= compteur%largeur;
+                            YPtTraces= (hauteur-1)-(compteur/largeur);
+                            vectPosXTr3.push_back(XPtTraces);
+                            vectPosYTr3.push_back(YPtTraces);
+                        }
+                    case 2:
+                        if(tmp==vectColorTraces.at(1)){
+                            XPtTraces= compteur%largeur;
+                            YPtTraces= (hauteur-1)-(compteur/largeur);
+                            vectPosXTr2.push_back(XPtTraces);
+                            vectPosYTr2.push_back(YPtTraces);
+                        }
+                    case 1:
+                        if(tmp==vectColorTraces.at(0)){
+                            XPtTraces= compteur%largeur;
+                            YPtTraces= (hauteur-1)-(compteur/largeur);
+                            vectPosXTr1.push_back(XPtTraces);
+                            vectPosYTr1.push_back(YPtTraces);
+                        }
+                        break;
+                    default:// le default case: mettre a la fin, sinon il y va toujours
+                        string errNoTr="Il y a un probleme avec le nombre de courbes (trop nombreuse ou aucune courbe presente)";
+                        Shutdown(errNoTr, f_in, f_out);
+                        break;
                 }
-                else if(tmp==vectColorTraces.at(1)){// A ERREUR POSSIBLE: MINIMUM 10 POINTS --> TESTER TAILLE VECTEUR (exterieure du while)
-                    XPtTraces= compteur%largeur;
-                    YPtTraces= (hauteur-1)-(compteur/largeur);
-                    vectPosXTr2.push_back(XPtTraces);
-                    vectPosYTr2.push_back(YPtTraces);
-                }/*                                   PROBLEME: NOMBRE DE TRACE PEUX VARIER DE 0 (ERREUR PAS DE TRACE) A 4 (MAX)--> VERIFIER SI Y A LA TRACE AVANT D'ECRIRE DEDANS
-                else if(tmp==vectColorTraces.at(2)){// A ERREUR POSSIBLE: MINIMUM 10 POINTS --> TESTER TAILLE VECTEUR (exterieure du while)
-                    XPtTraces= compteur%largeur;
-                    YPtTraces= (hauteur-1)-(compteur/largeur);
-                    vectPosXTr3.push_back(XPtTraces);
-                    vectPosYTr3.push_back(YPtTraces);
-                }
-                else if(tmp==vectColorTraces.at(3)){// A ERREUR POSSIBLE: MINIMUM 10 POINTS --> TESTER TAILLE VECTEUR (exterieure du while)
-                    XPtTraces= compteur%largeur;
-                    YPtTraces= (hauteur-1)-(compteur/largeur);
-                    vectPosXTr4.push_back(XPtTraces);
-                    vectPosYTr4.push_back(YPtTraces);
-                }*/
                 compteur++;
+            }
+//Test si les 4 points de Ref sont dans l'image
+            if((XptRef1==-1)&&(XptRef2==-1)&&(XptRef3==-1)&&(XptRef4==-1)){ //Besoin de tester qu'une coord. car si x là --> y aussi
+                string errPtRef = "Un Point de Reference est manquant";
+                Shutdown(errPtRef, f_in, f_out);
+            }
+
+            string errNbPtTr= "Une courbe n'a pas assez de point pour pouvoir la dessiner";
+
+// Test s'il y a assez de points . tester dans un Switch car nombre de traces peut varier
+            switch(nbTraces){
+                case 4:
+                    if(vectPosXTr4.size()<10){
+                        Shutdown(errNbPtTr, f_in, f_out);
+                    }
+                case 3:
+                    if(vectPosXTr3.size()<10){
+                        Shutdown(errNbPtTr, f_in, f_out);
+                    }
+                case 2:
+                    if(vectPosXTr2.size()<10){
+                        Shutdown(errNbPtTr, f_in, f_out);
+                    }
+                case 1:
+                    if(vectPosXTr1.size()<10){
+                        Shutdown(errNbPtTr, f_in, f_out);
+                    }
+                    break;
             }
         }
     }
