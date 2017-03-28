@@ -169,7 +169,7 @@ int main(){
                 compteur++;
             }
 //Test si les 4 points de Ref sont dans l'image
-            if((XptRef1==-1)&&(XptRef2==-1)&&(XptRef3==-1)&&(XptRef4==-1)){ //Besoin de tester qu'une coord. car si x là --> y aussi
+            if((XptRef1==-1)||(XptRef2==-1)||(XptRef3==-1)||(XptRef4==-1)){ //Besoin de tester qu'une coord. car si x là --> y aussi
                 string errPtRef = "Un Point de Reference est manquant";
                 Shutdown(errPtRef, f_in, f_out);
             }
