@@ -7,7 +7,8 @@ using namespace std;
 
 //Prototypes
 void shutdown(string message, ifstream &f_in, ofstream &f_out);
-void printTabl(vector <int> const &vect2Print(), int &FnXptRef1, int &FnXptRef2, int &FnXptRef3, int &FnXptRef4,int &FnYptRef1, int &FnYptRef2, int &FnYptRef3, int &FnYptRef4);
+void printRef(const int &FnXptRef1, const int &FnXptRef2, const int &FnXptRef3, const int &FnXptRef4, const int &FnYptRef1, const int &FnYptRef2, const int &FnYptRef3, const int &FnYptRef4);
+void printTrace(vector <int> const &vect2PrintX, vector <int> const &vect2PrintY, const int &k);
 
 //Définition des fonctions
 void Shutdown(string message, ifstream &f_in, ofstream &f_out){
@@ -17,12 +18,24 @@ void Shutdown(string message, ifstream &f_in, ofstream &f_out){
     exit(EXIT_FAILURE); // Arrete le fichier si la fonction shutdown est appele
 }
 
-void printVect(vector <int> const &vect2Print, int &FnXptRef1, int &FnXptRef2, int &FnXptRef3, int &FnXptRef4,int &FnYptRef1, int &FnYptRef2, int &FnYptRef3, int &FnYptRef4){//print le vecteur
-    int szVect2Print=vect2Print.size();
-    for(int i(0);i<szVect2Print;i++){
-        cout<<"V("<<i<<")= "<<vect2Print.at(i)<<endl;
+//print les points de référence
+void PrintRef(const int &FnXptRef1, const int &FnXptRef2, const int &FnXptRef3, const int &FnXptRef4, const int &FnYptRef1, const int &FnYptRef2, const int &FnYptRef3, const int &FnYptRef4){
+    f_out << "P = [" << FnXptRef1 << " " << FnYptRef1 << endl;
+    f_out << FnXptRef2 << " " << FnYptRef2 << endl;
+    f_out << FnXptRef3 << " " << FnYptRef3 << endl;
+    f_out << FnXptRef4 << " " << FnYptRef4 << endl;
+    f_out << "];" << endl;
+}
+
+//print les vecteurs contenant les coordonnées de la trace indiquée
+void PrintTrace(vector <int> const &vect2PrintX, vector <int> const &vect2PrintY, const int &k){
+    int size = vect2PrintX.size();
+    f_out << "C" << k <<" = [" << endl;
+    for(int i(0); i<size; i++){
+        f_out << vect2PrintX.at(i) << " " << vect2PrintY.at(i)<<endl;
     }
-    string f_name_out;
+    f_out << "];" << endl;
+    /*string f_name_out;
     f_name_out= "traces.txt";
     ofstream f_out(f_name_out.c_str());
     /*if(f_out.fail()){
@@ -130,10 +143,12 @@ int main(){
                     }
                 }
 
+
 //Recherche Point de Ref   SWITCH CASE MIEUX ? A TESTER---> pas sur
                 
                 //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
                 if(tmp==vectColorRef.at(0)){
+
                     XptRef1= compteur%largeur;
                     YptRef1= (hauteur-1)-(compteur/largeur);// Possible promblème ? faudrait-il mieux arrondir avant la soustraction ?
                     cout<<"X= "<<XptRef1<<" Y= "<<YptRef1<<endl;
@@ -149,7 +164,7 @@ int main(){
                 //test si la ligne a la couleur de ref 3. CA A L'AIRE OK. A VERIFIER
                 else if(tmp==vectColorRef.at(2)){
                     XptRef3= compteur%largeur;
-                    YptRef4= (hauteur-1)-(compteur/largeur);
+                    YptRef3= (hauteur-1)-(compteur/largeur);
                     cout<<"X= "<<XptRef3<<" Y= "<<YptRef3<<endl;
                 }
                 
@@ -194,6 +209,13 @@ int main(){
                 }
                 compteur++;
             }
+            
+            //Test si la taille de l'image correspond à la hauteur * la largeur indiquées
+            if(compteur != hauteur*largeur){
+                string errTaille = "La taille de l'image ne correspond pas à la hauteur * la largeur indiquées";
+                Shutdown(errTaille, f_in, f_out);
+            }
+            
 //Test si les 4 points de Ref sont dans l'image
             if((XptRef1==-1)||(XptRef2==-1)||(XptRef3==-1)||(XptRef4==-1)){ //Besoin de tester qu'une coord. car si x là --> y aussi
                 string errPtRef = "Un Point de Reference est manquant";
@@ -222,6 +244,13 @@ int main(){
                     }
                     break;
             }
+            
+            PrintRef(XptRef1, XptRef2, XptRef3, XptRef4, YptRef1, YptRef2, YptRef3, YptRef4);
+            
+            for(int j(0); j < nbTraces; j++){
+                PrintTraces(vectPosXTrj, vectPosXTrj, j); //possible d'ajouter un int au bout d'un nom??
+            }
+            
         }
     }
 }
