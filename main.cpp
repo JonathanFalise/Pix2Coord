@@ -6,9 +6,8 @@
 using namespace std;
 
 //Prototypes
-void shutdown(string message, ifstream &f_in, ofstream &f_out);
-void printRef(const int &FnXptRef1, const int &FnXptRef2, const int &FnXptRef3, const int &FnXptRef4, const int &FnYptRef1, const int &FnYptRef2, const int &FnYptRef3, const int &FnYptRef4);
-void printTrace(vector <int> const &vect2PrintX, vector <int> const &vect2PrintY, const int &k);
+void Shutdown(string message, ifstream &f_in, ofstream &f_out);
+void Print(string nomVect, vector <int> const &vect2PrintX, vector <int> const &vect2PrintY, ofstream &f_out);
 
 //Définition des fonctions
 void Shutdown(string message, ifstream &f_in, ofstream &f_out){
@@ -18,41 +17,27 @@ void Shutdown(string message, ifstream &f_in, ofstream &f_out){
     exit(EXIT_FAILURE); // Arrete le fichier si la fonction shutdown est appele
 }
 
-//print les points de référence
-void PrintRef(const int &FnXptRef1, const int &FnXptRef2, const int &FnXptRef3, const int &FnXptRef4, const int &FnYptRef1, const int &FnYptRef2, const int &FnYptRef3, const int &FnYptRef4){
-    f_out << "P = [" << FnXptRef1 << " " << FnYptRef1 << endl;
-    f_out << FnXptRef2 << " " << FnYptRef2 << endl;
-    f_out << FnXptRef3 << " " << FnYptRef3 << endl;
-    f_out << FnXptRef4 << " " << FnYptRef4 << endl;
-    f_out << "];" << endl;
-}
-
 //print les vecteurs contenant les coordonnées de la trace indiquée
-void PrintTrace(vector <int> const &vect2PrintX, vector <int> const &vect2PrintY, const int &k){
-    int size = vect2PrintX.size();
-    f_out << "C" << k <<" = [" << endl;
-    for(int i(0); i<size; i++){
-        f_out << vect2PrintX.at(i) << " " << vect2PrintY.at(i)<<endl;
-    }
-    f_out << "];" << endl;
-    /*string f_name_out;
-    f_name_out= "traces.txt";
-    ofstream f_out(f_name_out.c_str());
-    /*if(f_out.fail()){
+void Print(string nomVect, vector <int> const &vect2PrintX, vector <int> const &vect2PrintY, ofstream &f_out){
+    if(f_out.fail()){
         cerr<<"erreur lors de l'ecriture dans le fichier de sortie"<<endl;
         //Un truc pour clean
-    }else{
-        f_out<<"P = [ "<<FnXptRef1<<" "<<FnYptRef1<<endl;//écrit dans le fichier la postion 1 du tableau
-        f_out<<FnXptRef2<<" "<<FnYptRef2<<endl;
-        f_out<<FnXptRef3<<" "<<FnYptRef3<<endl;
-        f_out<<FnXptRef4<<" "<<FnYptRef4<<endl;
-        f_out.close();
-    }*/
+    }
+    else{
+        int size = vect2PrintX.size();
+        f_out << nomVect << endl;
+        for (int i(0); i<size; i++) {
+        f_out << vect2PrintX.at(i) << " " << vect2PrintY.at(i) << endl;
+        }
+        f_out << "];" << endl;
+    }
 }
 
 int main(){
     ifstream f_in("Pixmap1.txt");
-    ofstream f_out;
+    string f_name_out;
+    f_name_out="traces.m";
+    ofstream f_out(f_name_out.c_str());
 
     if(f_in.fail()){ //test de l'ouverture du fichier
         string errOuv = "Erreur lors de l'ouverture du fichier pixmap.txt";
@@ -66,8 +51,8 @@ int main(){
         else{
             int largeur(0), hauteur(0), nbCoul(0), nbTraces(0), compteur(0);
             int XptRef1(-1),YptRef1(-1),XptRef2(-1),YptRef2(-1),XptRef3(-1),YptRef3(-1),XptRef4(-1),YptRef4(-1);// initialise a -1 car on doit verifier si les points de références sont donnés (et il pourrait être égale a 0).
-            vector <int> vectColorRef, vectColorTraces;
-            
+            vector <int> vectColorRef, vectColorTraces,vectRefX, vectRefY, vectPosXTr1, vectPosYTr1,vectPosXTr2, vectPosYTr2,vectPosXTr3, vectPosYTr3,vectPosXTr4, vectPosYTr4;
+
             // Récupération de la largeur dans un int
             f_in >> largeur;
             if(largeur<10){
@@ -82,7 +67,7 @@ int main(){
             }
 
             // Récupération de la hauteur dans un int
-            f_in >> hauteur; 
+            f_in >> hauteur;
             if(hauteur<10){
                 string errDim = "La hauteur est trop petite (<10)!";
                 Shutdown(errDim, f_in, f_out);
@@ -97,27 +82,14 @@ int main(){
 
             f_in >> nbCoul;
             nbTraces = nbCoul - 4;
-            
-            //Définition des vecteurs contenant les coordonnées des points des traces selon le nombre de traces de l'image
-            //Renvoie une erreur s'il n'y a aucune trace ou s'il y en a plus que 4
-            switch(nbTraces){
-                case 4:
-                   vector <int> vectPosXTr4, vectPosYTr4;
-                case 3:
-                   vector <int> vectPosXTr3, vectPosYTr3;
-                case 2:
-                   vector <int> vectPosXTr2, vectPosYTr2;
-                case 1:
-                   vector <int> vectPosXTr1, vectPosYTr1;
-                   break;
-                default:
-                     string errNoTr="Il y a un probleme avec le nombre de courbes (trop nombreuses ou aucune courbe presente)";
-                     Shutdown(errNoTr, f_in, f_out);
-                     break;
+
+            if((nbTraces==0)||(nbTraces>4)){
+                string errNoTr="Il y a un probleme avec le nombre de courbes (trop nombreuses ou aucune courbe presente)";
+                Shutdown(errNoTr, f_in, f_out);
             }
-            
+
             //Couleurs des points référence dans un vecteur
-            for(int i(0); i < 4; i++){ 
+            for(int i(0); i < 4; i++){
                 int tmp(0);
                 f_in >> tmp;
                 vectColorRef.push_back(tmp);
@@ -125,12 +97,12 @@ int main(){
             //printVect(vectColorRef);
 
             //Couleurs des différentes traces
-            for(int j(0); j < nbTraces; j++){  
+            for(int j(0); j < nbTraces; j++){
                 int tmp(0);
                 f_in >> tmp;
                 vectColorTraces.push_back(tmp);
             }
-            //printVect(vectColorTraces);
+
 
             while(!f_in.eof()){     //Boucle qui lit tout le fichier GESTION ERREUR A FAIRE: 1PIXEL NON BLANC. A VOIR: PAS BESOIN DE TABLEAU DE STOCKAGE INTERME COMME DEMANDER DANS LA DONNEE.
                 int tmp(0),XPtTraces(0),YPtTraces(0);
@@ -145,29 +117,30 @@ int main(){
 
 
 //Recherche Point de Ref   SWITCH CASE MIEUX ? A TESTER---> pas sur
-                
+
                 //test si la ligne a la couleur de ref 1. CA A L'AIRE OK. A VERIFIER
                 if(tmp==vectColorRef.at(0)){
 
                     XptRef1= compteur%largeur;
                     YptRef1= (hauteur-1)-(compteur/largeur);// Possible promblème ? faudrait-il mieux arrondir avant la soustraction ?
+
                     cout<<"X= "<<XptRef1<<" Y= "<<YptRef1<<endl;
                 }
-                
+
                 //test si la ligne a la couleur de ref 2. CA A L'AIRE OK. A VERIFIER
                 else if(tmp==vectColorRef.at(1)){
                     XptRef2= compteur%largeur;
                     YptRef2= (hauteur-1)-(compteur/largeur);
                     cout<<"X= "<<XptRef2<<" Y= "<<YptRef2<<endl;
                 }
-                
+
                 //test si la ligne a la couleur de ref 3. CA A L'AIRE OK. A VERIFIER
                 else if(tmp==vectColorRef.at(2)){
                     XptRef3= compteur%largeur;
                     YptRef3= (hauteur-1)-(compteur/largeur);
                     cout<<"X= "<<XptRef3<<" Y= "<<YptRef3<<endl;
                 }
-                
+
                 //test si la ligne a la couleur de ref 4. CA A L'AIRE OK. A VERIFIER
                 else if(tmp==vectColorRef.at(3)){
                     XptRef4= compteur%largeur;
@@ -209,13 +182,7 @@ int main(){
                 }
                 compteur++;
             }
-            
-            //Test si la taille de l'image correspond à la hauteur * la largeur indiquées
-            if(compteur != hauteur*largeur){
-                string errTaille = "La taille de l'image ne correspond pas à la hauteur * la largeur indiquées";
-                Shutdown(errTaille, f_in, f_out);
-            }
-            
+
 //Test si les 4 points de Ref sont dans l'image
             if((XptRef1==-1)||(XptRef2==-1)||(XptRef3==-1)||(XptRef4==-1)){ //Besoin de tester qu'une coord. car si x là --> y aussi
                 string errPtRef = "Un Point de Reference est manquant";
@@ -244,13 +211,43 @@ int main(){
                     }
                     break;
             }
-            
-            PrintRef(XptRef1, XptRef2, XptRef3, XptRef4, YptRef1, YptRef2, YptRef3, YptRef4);
-            
-            for(int j(0); j < nbTraces; j++){
-                PrintTraces(vectPosXTrj, vectPosXTrj, j); //possible d'ajouter un int au bout d'un nom??
-            }
-            
+
+            vectRefX.push_back(XptRef1);
+            vectRefY.push_back(YptRef1);
+            vectRefX.push_back(XptRef2);
+            vectRefY.push_back(YptRef2);
+            vectRefX.push_back(XptRef3);
+            vectRefY.push_back(YptRef3);
+            vectRefX.push_back(XptRef4);
+            vectRefY.push_back(YptRef4);
+
+            string nomRef= "P=[";
+            Print(nomRef,vectRefX,vectRefY, f_out);
+
+            switch (nbTraces) {
+                default: cout<< "test"<< endl;
+                case 4:{
+                    string nomTr3="C3=[";
+                    Print(nomTr3,vectPosXTr4,vectPosYTr4, f_out);
+                }
+                case 3:{
+                    string nomTr2="C2=[";
+                    Print(nomTr2,vectPosXTr3,vectPosYTr3, f_out);
+                }
+                case 2:{
+                    string nomTr1="C1=[";
+                    Print(nomTr1,vectPosXTr2,vectPosYTr2, f_out);
+                }
+                case 1:{
+                    string nomTr0="C0=[";
+                    Print(nomTr0,vectPosXTr1,vectPosYTr1, f_out);
+                    break;
+                }
+ 			}
+
+ 			f_in.close();
+ 			f_out.close();
+
         }
     }
 }
